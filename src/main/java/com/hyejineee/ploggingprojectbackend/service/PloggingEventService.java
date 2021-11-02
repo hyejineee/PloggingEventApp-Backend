@@ -10,6 +10,8 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Base64Utils;
 
+import java.util.List;
+
 @Service
 public class PloggingEventService {
 
@@ -18,5 +20,13 @@ public class PloggingEventService {
 
     public int insertPloggingEvent(PloggingEventVO ploggingEventVO){
         return eventDAO.insertPloggingEvent(ploggingEventVO);
+    }
+
+    public String getAddress() {
+        return eventDAO.getAddress();
+    }
+
+    public List<PloggingEventVO> getAllPloggingEvent() {
+        return eventDAO.getAllPloggingEvent();
     }
 }

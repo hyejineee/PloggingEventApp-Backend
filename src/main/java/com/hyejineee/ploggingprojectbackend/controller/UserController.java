@@ -35,10 +35,10 @@ public class UserController {
         UserVO authorizedUser = userService.authorizeToUser(token);
 
         if(authorizedUser == null){
-            return new ResponseDTO<UserVO>(401, "로그인 실패", null);
+            return new ResponseDTO<>(401, "로그인 실패", null);
         }
 
-        session.setAttribute("user_id", authorizedUser.getId());
+        session.setAttribute("user", authorizedUser);
         return new ResponseDTO<UserVO>(200, "로그인 성공", authorizedUser);
     }
 }
