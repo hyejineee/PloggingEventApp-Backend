@@ -34,8 +34,8 @@
         select * from plogging_event
     </select>
 
-    <select id="getAddress" resultType="string">
-        select address from plogging_event
+    <select id="getPloggingEventById" resultType="PloggingEventVO">
+        select * from plogging_event where id = #{id}
     </select>
 
 

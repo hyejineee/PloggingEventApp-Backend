@@ -11,6 +11,7 @@
     <mappers>
         <mapper resource="mybatis/mappers/user.xml"/>
         <mapper resource="mybatis/mappers/plogging_event.xml"/>
+        <mapper resource="mybatis/mappers/participants.xml"/>
 
     </mappers>
 </configuration>

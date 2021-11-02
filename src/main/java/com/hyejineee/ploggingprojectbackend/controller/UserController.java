@@ -29,7 +29,6 @@ public class UserController {
 
     @GetMapping()
     public ResponseDTO<UserVO> login(@RequestHeader Map<String, Object> headers, HttpSession session){
-        System.out.println(headers);
 
         String token =  headers.get("authorization").toString();
         UserVO authorizedUser = userService.authorizeToUser(token);

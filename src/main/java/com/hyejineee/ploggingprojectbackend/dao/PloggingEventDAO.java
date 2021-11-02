@@ -19,4 +19,6 @@ public interface PloggingEventDAO {
     String getAddress();
 
     List<PloggingEventVO> getAllPloggingEvent() throws DataAccessException;
+
+    PloggingEventVO getPloggingEventById(int id);
 }

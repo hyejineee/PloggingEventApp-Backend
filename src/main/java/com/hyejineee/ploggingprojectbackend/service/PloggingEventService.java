@@ -22,11 +22,11 @@ public class PloggingEventService {
         return eventDAO.insertPloggingEvent(ploggingEventVO);
     }
 
-    public String getAddress() {
-        return eventDAO.getAddress();
-    }
-
     public List<PloggingEventVO> getAllPloggingEvent() {
         return eventDAO.getAllPloggingEvent();
+    }
+
+    public PloggingEventVO getPloggingEventById(int eventId){
+        return eventDAO.getPloggingEventById(eventId);
     }
 }

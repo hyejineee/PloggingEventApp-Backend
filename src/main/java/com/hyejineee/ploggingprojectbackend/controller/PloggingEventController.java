@@ -4,6 +4,7 @@ import com.hyejineee.ploggingprojectbackend.service.ParticipantsService;
 import com.hyejineee.ploggingprojectbackend.service.PloggingEventService;
 import com.hyejineee.ploggingprojectbackend.service.UserService;
 import com.hyejineee.ploggingprojectbackend.service.dto.ResponseDTO;
+import com.hyejineee.ploggingprojectbackend.vo.ParticipantsVO;
 import com.hyejineee.ploggingprojectbackend.vo.PloggingEventVO;
 import com.hyejineee.ploggingprojectbackend.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,10 @@ public class PloggingEventController {
     static String ONGOING_STATE = "ongoing";
     static String FINISH_STATE = "finished";
 
+    static String PARTICIPATE_STATE = "joining";
+    static String NON_PARTICIPATE_STATE = "outgoing";
+
+
     @Autowired
     PloggingEventService eventService;
 
@@ -30,11 +35,7 @@ public class PloggingEventController {
 
     @PostMapping()
     ResponseDTO<PloggingEventVO> createPloggingEvent(@RequestBody PloggingEventVO requestData, HttpSession session) {
-        System.out.println(requestData);
-
         UserVO user = (UserVO) session.getAttribute("user");
-
-        System.out.println(user);
 
         if (user == null) {
             return new ResponseDTO<>(401, "로그인 후 사용할 수 있습니다.", null);
@@ -46,7 +47,7 @@ public class PloggingEventController {
         try {
             eventService.insertPloggingEvent(requestData);
         } catch (DataAccessException e) {
-            System.out.println(e);
+            e.printStackTrace();
             return new ResponseDTO<>(500, "이벤트 생성 실패", null);
         }
 
@@ -60,7 +61,7 @@ public class PloggingEventController {
         try {
             events = eventService.getAllPloggingEvent();
         } catch (DataAccessException e) {
-            System.out.println("getAllPloggingEvent error : " + e);
+            e.printStackTrace();
             return new ResponseDTO<>(500, "이벤트 불러오기 실패", null);
         }
 
@@ -68,24 +69,37 @@ public class PloggingEventController {
             return new ResponseDTO<>(500, "이벤트 불러오기 실패", null);
         }
 
-        System.out.println("events : " + events);
         return new ResponseDTO<List<PloggingEventVO>>(200, "이벤트 불러오기 성공", events);
     }
 
 
     @PostMapping("/{eventId}")
-    ResponseDTO<PloggingEventVO> participateEvent(@PathVariable String eventId, HttpSession session){
+    ResponseDTO<PloggingEventVO> participateEvent(@PathVariable int eventId, HttpSession session){
+
         UserVO user = (UserVO) session.getAttribute("user");
 
         if (user == null) {
             return new ResponseDTO<>(401, "로그인 후 사용할 수 있습니다.", null);
         }
 
+        ParticipantsVO participants = new ParticipantsVO(-1, user.getId(), eventId, PARTICIPATE_STATE);
+        PloggingEventVO participateEvent = null;
+
+        try {
+            participateEvent = participantsService.insertParticipants(participants, eventId);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseDTO<>(500, e.getMessage(), null);
+        }
+
+        if(participateEvent == null){
+            return new ResponseDTO<>(500, "이벤트 참여 실패", null);
+        }
 
 
-
-        return new ResponseDTO<>(401, "로그인 후 사용할 수 있습니다.", null);
+        return new ResponseDTO<>(200, "이벤트 참여 성공", participateEvent);
     }
+
 
 
 
